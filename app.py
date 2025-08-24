@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 from tensorflow.keras.models import load_model
 from PIL import Image
 import numpy as np
@@ -24,6 +24,10 @@ def prepare_image(img_path):
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
+@app.route('/staticuploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory('staticuploads', filename)
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     prediction = None
@@ -32,7 +36,7 @@ def index():
         if 'file' not in request.files or request.files['file'].filename == '':
             return redirect(request.url)
         file = request.files['file']
-        upload_folder = os.path.join('static', 'uploads')
+        upload_folder = "staticuploads"
         os.makedirs(upload_folder, exist_ok=True)
         filepath = os.path.join(upload_folder, file.filename)
         file.save(filepath)
@@ -40,7 +44,7 @@ def index():
         img_array = prepare_image(filepath)
         pred = model.predict(img_array)
         prediction = "AI Generated" if pred[0][0] > 0.5 else "Human Created"
-        img_url = url_for('static', filename='uploads/' + file.filename)
+        img_url = url_for('uploaded_file', filename=file.filename)
 
     return render_template('index.html', prediction=prediction, img_url=img_url)
 
