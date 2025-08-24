@@ -1,0 +1,6 @@
+AIProject/
+  ├── app.py
+  ├── requirements.txt
+  ├── ResNet152V2-AIvsHumanGenImages.keras
+  └── .streamlit/
+      └── config.toml
