@@ -3,9 +3,17 @@ from tensorflow.keras.models import load_model
 from PIL import Image
 import numpy as np
 import os
+import gdown
+
+MODEL_PATH = "ResNet152V2-AIvsHumanGenImages.keras"
+MODEL_URL = f"https://drive.google.com/uc?id=1MPuzeNe1xu4GTolnbRoMC7BAV9eEYF_k"
+
+# Download model if not present
+if not os.path.exists(MODEL_PATH):
+    st.write("Downloading model, please wait...")
+    gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
 # Load model
-MODEL_PATH = os.path.join(os.getcwd(), "ResNet152V2-AIvsHumanGenImages.keras")
 model = load_model(MODEL_PATH)
 
 st.title("AI vs Human Generated Image Detection")
